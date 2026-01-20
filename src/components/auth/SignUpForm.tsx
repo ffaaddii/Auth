@@ -54,18 +54,20 @@ export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
     },
   });
 
+  // This onSubmit function will not be called from the public AuthPage
+  // It's kept here in case an admin panel uses it.
   function onSubmit(values: SignUpFormValues) {
-    console.log("Sign Up Form submitted:", values);
-    showSuccess("Sign up successful! (Check console for data)");
-    // In a real app, you'd handle API calls here and navigate on success
+    console.log("Admin-initiated Sign Up Form submitted:", values);
+    showSuccess("User created successfully by administrator! (Check console for data)");
+    // In a real admin panel, you'd handle API calls here to create a user via Supabase admin client
   }
 
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle className="text-2xl">Sign Up</CardTitle>
+        <CardTitle className="text-2xl">Sign Up (Admin Only)</CardTitle>
         <CardDescription>
-          Enter your details below to create an account.
+          This form is for administrators to create new user accounts.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -111,15 +113,14 @@ export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
               )}
             />
             <Button type="submit" className="w-full">
-              Sign Up
+              Create User
             </Button>
           </form>
         </Form>
       </CardContent>
       <CardFooter className="text-sm text-center text-muted-foreground">
-        Already have an account?{" "}
         <a href="#" onClick={onSwitchToSignIn} className="text-primary hover:underline ml-1">
-          Sign In
+          Back to Sign In
         </a>
       </CardFooter>
     </Card>

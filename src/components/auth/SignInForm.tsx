@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { showSuccess, showError } from "@/utils/toast";
 import React from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const signInSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -32,7 +33,7 @@ const signInSchema = z.object({
 type SignInFormValues = z.infer<typeof signInSchema>;
 
 interface SignInFormProps {
-  onSwitchToSignUp: () => void;
+  onSwitchToSignUp: () => void; // This will no longer be used for public sign-up
   onSwitchToForgotPassword: () => void;
 }
 
@@ -45,10 +46,20 @@ export function SignInForm({ onSwitchToSignUp, onSwitchToForgotPassword }: SignI
     },
   });
 
-  function onSubmit(values: SignInFormValues) {
-    console.log("Sign In Form submitted:", values);
-    showSuccess("Sign in successful! (Check console for data)");
-    // In a real app, you'd handle API calls here and navigate on success
+  async function onSubmit(values: SignInFormValues) {
+    const { email, password } = values;
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      showError(error.message);
+      console.error("Sign In Error:", error.message);
+    } else {
+      showSuccess("Signed in successfully!");
+      // Redirection is handled by SessionContextProvider
+    }
   }
 
   return (
@@ -100,10 +111,8 @@ export function SignInForm({ onSwitchToSignUp, onSwitchToForgotPassword }: SignI
         </Form>
       </CardContent>
       <CardFooter className="text-sm text-center text-muted-foreground">
-        Don't have an account?{" "}
-        <a href="#" onClick={onSwitchToSignUp} className="text-primary hover:underline ml-1">
-          Sign Up
-        </a>
+        {/* Removed public sign-up link as per admin-only sign-up request */}
+        Don't have an account? Please contact your administrator to create one.
       </CardFooter>
     </Card>
   );

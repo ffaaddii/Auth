@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { showSuccess, showError } from "@/utils/toast";
 import React from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -42,10 +43,18 @@ export function ForgotPasswordForm({ onSwitchToSignIn }: ForgotPasswordFormProps
     },
   });
 
-  function onSubmit(values: ForgotPasswordFormValues) {
-    console.log("Forgot Password request submitted:", values);
-    showSuccess("If an account exists, a reset link has been sent to your email.");
-    // In a real app, you'd handle API calls here
+  async function onSubmit(values: ForgotPasswordFormValues) {
+    const { email } = values;
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth?type=password_reset`, // Redirect back to auth page after reset
+    });
+
+    if (error) {
+      showError(error.message);
+      console.error("Forgot Password Error:", error.message);
+    } else {
+      showSuccess("If an account exists, a password reset link has been sent to your email.");
+    }
   }
 
   return (
