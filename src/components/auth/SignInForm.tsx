@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { showSuccess, showError } from "@/utils/toast";
+import React from "react";
 
 const signInSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -30,7 +31,12 @@ const signInSchema = z.object({
 
 type SignInFormValues = z.infer<typeof signInSchema>;
 
-export function SignInForm() {
+interface SignInFormProps {
+  onSwitchToSignUp: () => void;
+  onSwitchToForgotPassword: () => void;
+}
+
+export function SignInForm({ onSwitchToSignUp, onSwitchToForgotPassword }: SignInFormProps) {
   const form = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -40,7 +46,6 @@ export function SignInForm() {
   });
 
   function onSubmit(values: SignInFormValues) {
-    // This is where you would typically send data to your backend for authentication
     console.log("Sign In Form submitted:", values);
     showSuccess("Sign in successful! (Check console for data)");
     // In a real app, you'd handle API calls here and navigate on success
@@ -83,6 +88,11 @@ export function SignInForm() {
                 </FormItem>
               )}
             />
+            <div className="text-right text-sm">
+              <a href="#" onClick={onSwitchToForgotPassword} className="text-primary hover:underline">
+                Forgot password?
+              </a>
+            </div>
             <Button type="submit" className="w-full">
               Sign In
             </Button>
@@ -91,7 +101,7 @@ export function SignInForm() {
       </CardContent>
       <CardFooter className="text-sm text-center text-muted-foreground">
         Don't have an account?{" "}
-        <a href="#" className="text-primary hover:underline ml-1">
+        <a href="#" onClick={onSwitchToSignUp} className="text-primary hover:underline ml-1">
           Sign Up
         </a>
       </CardFooter>

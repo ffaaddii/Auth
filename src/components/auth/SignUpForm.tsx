@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { showSuccess, showError } from "@/utils/toast";
+import React from "react";
 
 const signUpSchema = z
   .object({
@@ -39,7 +40,11 @@ const signUpSchema = z
 
 type SignUpFormValues = z.infer<typeof signUpSchema>;
 
-export function SignUpForm() {
+interface SignUpFormProps {
+  onSwitchToSignIn: () => void;
+}
+
+export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -50,7 +55,6 @@ export function SignUpForm() {
   });
 
   function onSubmit(values: SignUpFormValues) {
-    // This is where you would typically send data to your backend for registration
     console.log("Sign Up Form submitted:", values);
     showSuccess("Sign up successful! (Check console for data)");
     // In a real app, you'd handle API calls here and navigate on success
@@ -114,7 +118,7 @@ export function SignUpForm() {
       </CardContent>
       <CardFooter className="text-sm text-center text-muted-foreground">
         Already have an account?{" "}
-        <a href="#" className="text-primary hover:underline ml-1">
+        <a href="#" onClick={onSwitchToSignIn} className="text-primary hover:underline ml-1">
           Sign In
         </a>
       </CardFooter>
