@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/AuthPage";
+import HRMPage from "./pages/HRMPage"; // Import the new HRMPage
 import { SessionContextProvider, useSession } from "./contexts/SessionContext";
 import React from "react";
 
@@ -40,6 +41,7 @@ const App = () => (
         <SessionContextProvider>
           <Routes>
             <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+            <Route path="/hrm" element={<ProtectedRoute><HRMPage /></ProtectedRoute>} /> {/* New HRM route */}
             <Route path="/auth" element={<AuthPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

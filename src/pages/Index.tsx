@@ -26,9 +26,16 @@ const Index = () => {
       <p className="text-lg text-gray-600 dark:text-gray-300 text-center max-w-prose">
         You are now signed in. This is your main application page.
       </p>
-      <Button size="lg" onClick={handleSignOut}>
-        Sign Out
-      </Button>
+      <div className="flex space-x-4">
+        <Button size="lg" onClick={handleSignOut}>
+          Sign Out
+        </Button>
+        <Link to="/hrm">
+          <Button size="lg" variant="secondary">
+            Go to HRM System
+          </Button>
+        </Link>
+      </div>
       <MadeWithDyad />
     </div>
   );
